@@ -13,7 +13,8 @@ struct ContentView: View {
         NavigationStack {
             List($emojiItems) { $item in
                 HStack {
-                    EmojiView(emoji: item.emoji, size: 44)
+                    Text(item.emoji)
+                        .font(.system(size: 36))
 
                     Text(item.name)
                         .font(.headline)
