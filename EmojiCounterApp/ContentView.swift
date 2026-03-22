@@ -2,19 +2,18 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var emojiItems: [EmojiItem] = [
-        EmojiItem(emoji: "😀", name: "Happy"),
-        EmojiItem(emoji: "🔥", name: "Fire"),
-        EmojiItem(emoji: "🚀", name: "Rocket"),
-        EmojiItem(emoji: "❤️", name: "Heart"),
-        EmojiItem(emoji: "⭐", name: "Star")
+        EmojiItem(emoji: "\u{1F600}", name: "Happy"),
+        EmojiItem(emoji: "\u{1F525}", name: "Fire"),
+        EmojiItem(emoji: "\u{1F680}", name: "Rocket"),
+        EmojiItem(emoji: "\u{2764}\u{FE0F}", name: "Heart"),
+        EmojiItem(emoji: "\u{2B50}", name: "Star")
     ]
 
     var body: some View {
         NavigationStack {
             List($emojiItems) { $item in
                 HStack {
-                    Text(item.emoji)
-                        .font(.system(size: 36))
+                    EmojiView(emoji: item.emoji, size: 44)
 
                     Text(item.name)
                         .font(.headline)

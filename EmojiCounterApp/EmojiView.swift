@@ -1,48 +1,46 @@
 import SwiftUI
 import UIKit
 
-/// Renders an emoji string as an image for reliable display across devices and simulators.
+/// Renders emoji as UIImage for display. Uses high-resolution rendering (font size 1024)
+/// then scales down for simulator and device compatibility.
 struct EmojiView: View {
     let emoji: String
     var size: CGFloat = 44
 
     var body: some View {
-        if let uiImage = emojiToImage(emoji, size: size) {
-            Image(uiImage: uiImage)
+        if let image = emojiToImage(emoji) {
+            Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: size, height: size)
         } else {
             Text(emoji)
-                .font(.system(size: size * 0.7))
+                .font(.system(size: size * 0.85))
         }
     }
 
-    private func emojiToImage(_ emoji: String, size: CGFloat) -> UIImage? {
+    private func emojiToImage(_ emoji: String) -> UIImage? {
         guard !emoji.isEmpty else { return nil }
-        let fontSize = size * 0.85
-        let font = UIFont.systemFont(ofSize: fontSize)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .center
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .paragraphStyle: paragraphStyle,
-        ]
-        let format = UIGraphicsImageRendererFormat()
-        format.scale = UIScreen.main.scale
-        format.opaque = false
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size), format: format)
-        return renderer.image { _ in
-            let rect = CGRect(x: 0, y: 0, width: size, height: size)
-            (emoji as NSString).draw(in: rect, withAttributes: attributes)
-        }
+        let nsString = emoji as NSString
+        let font = UIFont.systemFont(ofSize: 1024)
+        let stringAttributes: [NSAttributedString.Key: Any] = [.font: font]
+        let imageSize = nsString.size(withAttributes: stringAttributes)
+        guard imageSize.width > 0, imageSize.height > 0 else { return nil }
+
+        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0)
+        UIColor.clear.set()
+        UIRectFill(CGRect(origin: .zero, size: imageSize))
+        nsString.draw(at: .zero, withAttributes: stringAttributes)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }
 
 #Preview {
     HStack {
-        EmojiView(emoji: "😀")
-        EmojiView(emoji: "🔥")
-        EmojiView(emoji: "🚀")
+        EmojiView(emoji: "\u{1F600}")
+        EmojiView(emoji: "\u{1F525}")
+        EmojiView(emoji: "\u{1F680}")
     }
 }
