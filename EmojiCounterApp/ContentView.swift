@@ -11,38 +11,40 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            List($emojiItems) { $item in
-                HStack {
-                    EmojiView(emoji: item.emoji, size: 44)
+            List {
+                ForEach($emojiItems) { $item in
+                    HStack {
+                        EmojiView(emoji: item.emoji, size: 44)
 
-                    Text(item.name)
-                        .font(.headline)
+                        Text(item.name)
+                            .font(.headline)
 
-                    Spacer()
+                        Spacer()
 
-                    Text("\(item.count)")
-                        .font(.title2)
-                        .frame(minWidth: 40)
-
-                    Button {
-                        item.count -= 1
-                    } label: {
-                        Image(systemName: "minus.circle.fill")
+                        Text("\(item.count)")
                             .font(.title2)
-                            .foregroundStyle(.red)
-                    }
-                    .buttonStyle(.borderless)
+                            .frame(minWidth: 40)
 
-                    Button {
-                        item.count += 1
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(.green)
+                        Button {
+                            item.count -= 1
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(.red)
+                        }
+                        .buttonStyle(.borderless)
+
+                        Button {
+                            item.count += 1
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(.green)
+                        }
+                        .buttonStyle(.borderless)
                     }
-                    .buttonStyle(.borderless)
+                    .padding(.vertical, 4)
                 }
-                .padding(.vertical, 4)
             }
             .navigationTitle("Emoji Counter")
         }
